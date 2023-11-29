@@ -37,6 +37,16 @@ class LoginController extends StateNotifier<AsyncValue<bool>> {
     return newState.hasValue;
   }
 
+  Future<bool> registerUser(
+      String email, String password, String userId) async {
+    state = const AsyncValue.loading();
+
+    final newState = await AsyncValue.guard(
+        () => authRepo.registerUser(email, password, userId));
+
+    return newState.hasValue;
+  }
+
   Future<bool> isLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('isLogin') ?? false;

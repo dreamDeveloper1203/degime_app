@@ -12,8 +12,17 @@ mixin EmailAndPasswordValidators {
     return emailSubmitValidator.isValid(email);
   }
 
+  bool canSubmitName(String name) {
+    return emailSubmitValidator.isValid(name) && name.length >= 4;
+  }
+
   bool canSubmitPassword(String password) {
-    return passwordSignInSubmitValidator.isValid(password);
+    return passwordSignInSubmitValidator.isValid(password) &&
+        password.length >= 6;
+  }
+
+  bool canSubmitRePassword(String password, String repassword) {
+    return emailSubmitValidator.isValid(repassword) && password == repassword;
   }
 
   String? emailErrorText(String email, BuildContext context) {

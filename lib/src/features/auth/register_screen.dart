@@ -1,3 +1,5 @@
+import 'package:degime_app/src/features/auth/login_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,8 +12,6 @@ import 'package:degime_app/src/routing/app_router.dart';
 import 'package:degime_app/src/constants/app_styles.dart';
 import 'package:degime_app/src/utils/dialogs.dart';
 
-import 'package:degime_app/src/features/home/home_screen.dart';
-
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
@@ -22,32 +22,38 @@ class RegisterScreen extends ConsumerStatefulWidget {
 class _RegisterScreenState extends ConsumerState<RegisterScreen>
     with EmailAndPasswordValidators {
   final _node = FocusScopeNode();
+  final _usermailController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _repasswordController = TextEditingController();
+
   bool _isPasswordVisible = false;
+  bool _isRePasswordVisible = false;
 
   String get username => _usernameController.text;
   String get password => _passwordController.text;
+  String get usermail => _usermailController.text;
+  String get repassword => _repasswordController.text;
 
   @override
   void initState() {
     super.initState();
-    getLoginFlag();
   }
 
   @override
   void dispose() {
     // TextEditingControllers should be always disposed.
     _node.dispose();
+    _usermailController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
+    _repasswordController.dispose();
 
     super.dispose();
   }
 
   void _submit() {
     FocusManager.instance.primaryFocus?.unfocus();
-    showToast('ddd');
     // check username textfield's validation.
     final emailError = emailErrorText(username, context);
     if (emailError != null) {
@@ -61,48 +67,42 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
       showToast(pwdError);
       return;
     }
-
     // try to login with input data.
     final controller = ref.read(loginControllerProvider.notifier);
-    controller.doLogin(username, password).then(
+    controller.registerUser(username, password, username).then(
       (value) {
-        // go home only if login success.
-        if (value == true) {
-          showToast("Login Success");
-          context.goNamed(AppRoute.home.name);
-        }
+        showToast("Register Success");
+        context.goNamed(AppRoute.login.name);
       },
     );
   }
 
   void _emailEditingComplete() {
-    if (canSubmitEmail(username)) {
+    if (canSubmitEmail(usermail)) {
+      _node.nextFocus();
+    }
+  }
+
+  void _nameEditingComplete() {
+    if (canSubmitName(username)) {
       _node.nextFocus();
     }
   }
 
   void _passwordEditingComplete() {
-    if (!canSubmitEmail(username)) {
+    if (canSubmitPassword(password)) {
+      _node.nextFocus();
+      _node.nextFocus();
+    }
+  }
+
+  void _repasswordEditingComplete() {
+    if (!canSubmitRePassword(password, repassword)) {
+      _node.previousFocus();
       _node.previousFocus();
       return;
     }
-
-    // i can't understand why this called multiple...
-    //if (ref.watch(loginControllerProvider).isLoading) return;
     _submit();
-  }
-
-  Future<void> getLoginFlag() async {
-    final controller = ref.read(loginControllerProvider.notifier);
-    controller.getLoggedInID();
-    bool data = await controller.isLogin();
-    // if (data) {
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (context) => const HomeScreen(),
-    //       ));
-    // }
   }
 
   @override
@@ -134,20 +134,36 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Text('新規登録', style: MainTilte),
+                            Text('新規登録', style: MainTitle),
                             Flexible(flex: 1, child: SizedBox(height: 150.h)),
                             Align(
                               alignment: Alignment.center,
-                              child: Text(
-                                'すでに登録済みの方は、こちらからログインできます',
-                                style: NormalText,
-                              ),
+                              child: RichText(
+                                  text: TextSpan(
+                                      text: 'すでに登録済みの方は',
+                                      style: NormalText,
+                                      children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'こちら',
+                                        style: NormalLinkText,
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const LoginScreen(),
+                                                ));
+                                          }),
+                                    TextSpan(
+                                        text: 'からログインできます', style: NormalText)
+                                  ])),
                             ),
                             Flexible(flex: 1, child: SizedBox(height: 150.h)),
                             SizedBox(
                               height: 100,
                               child: TextField(
-                                controller: _usernameController,
+                                controller: _usermailController,
                                 //validator: (username) => emailErrorText(username ?? ''),
                                 autocorrect: false,
                                 textInputAction: TextInputAction.next,
@@ -156,9 +172,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                 onEditingComplete: () =>
                                     _emailEditingComplete(),
                                 decoration: InputDecoration(
-                                    labelText: "ユーザー名(半角英数字４文字以上)",
+                                    labelText: "Eメール",
                                     icon: Icon(Icons.email),
-                                    hintText: "ユーザー名を入力してください",
+                                    hintText: "メールアドレスを入力してください",
                                     border: UnderlineInputBorder()),
                               ),
                             ),
@@ -172,11 +188,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                 textInputAction: TextInputAction.next,
                                 keyboardType: TextInputType.name,
                                 cursorColor: Colors.white,
-                                onEditingComplete: () =>
-                                    _emailEditingComplete(),
+                                onEditingComplete: () => _nameEditingComplete(),
                                 decoration: InputDecoration(
-                                    labelText: "ユーザー名かメールアドレスを入力してください",
-                                    icon: Icon(Icons.email),
+                                    labelText: "ユーザー名(半角英数字４文字以上)",
+                                    icon: Icon(Icons.person),
                                     hintText: "ユーザー名を入力してください",
                                     border: UnderlineInputBorder()),
                               ),
@@ -190,7 +205,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                 //validator: (pwd) => passwordErrorText(pwd ?? ''),
                                 obscureText: !_isPasswordVisible,
                                 autocorrect: false,
-                                textInputAction: TextInputAction.done,
+                                textInputAction: TextInputAction.next,
                                 cursorColor: Colors.white,
                                 onEditingComplete: () =>
                                     _passwordEditingComplete(),
@@ -212,10 +227,41 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                     border: UnderlineInputBorder()),
                               ),
                             ),
+                            Flexible(flex: 1, child: SizedBox(height: 30.h)),
+                            SizedBox(
+                              height: 100,
+                              child: TextField(
+                                controller: _repasswordController,
+                                keyboardType: TextInputType.visiblePassword,
+                                //validator: (pwd) => passwordErrorText(pwd ?? ''),
+                                obscureText: !_isRePasswordVisible,
+                                autocorrect: false,
+                                textInputAction: TextInputAction.next,
+                                cursorColor: Colors.white,
+                                onEditingComplete: () =>
+                                    _repasswordEditingComplete(),
+                                decoration: InputDecoration(
+                                    labelText: "パスワードを再入力してください",
+                                    icon: Icon(Icons.lock),
+                                    suffixIcon: IconButton(
+                                      icon: _isRePasswordVisible
+                                          ? Icon(Icons.visibility)
+                                          : Icon(Icons.visibility_off),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isRePasswordVisible =
+                                              !_isRePasswordVisible;
+                                        });
+                                      },
+                                    ),
+                                    hintText: "パスワード再入力",
+                                    border: UnderlineInputBorder()),
+                              ),
+                            ),
                             Align(
-                              alignment: Alignment.bottomRight,
+                              alignment: Alignment.center,
                               child: Text(
-                                'パスワードを忘れた方',
+                                '登録すると、利用規約・プライバシーポリシーに同意したとみなします',
                                 style: SmallText,
                               ),
                             ),
@@ -234,14 +280,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                     50.0), // Adjust vertical padding
                               ),
                               child: Text(
-                                'ログイン',
+                                '新規登録',
                                 style: TextStyle(
                                   color: Colors.white, // Text color
                                   fontSize: 16.0, // Text size
                                 ),
                               ),
                             ),
-                            Flexible(flex: 1, child: SizedBox(height: 100.h)),
+                            Flexible(flex: 1, child: SizedBox(height: 300.h)),
                           ]),
                     ),
                   ],

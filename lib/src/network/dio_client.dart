@@ -22,12 +22,26 @@ class DioClient {
   // * keep token for future usage.
   static String _token = '';
 
-  // * POST: '/login'
+  // * POST: '/auth/sign-in'
   static Future<dynamic> postLogin(String email, String password) async {
     var dio = Dio(_baseOptions);
     try {
       final response = await dio
           .post('/auth/sign-in', data: {'email': email, 'password': password});
+      return response.data;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  // * POST: '/auth/sign-up'
+  static Future<dynamic> postRegister(
+      String email, String password, String userId) async {
+    var dio = Dio(_baseOptions);
+    try {
+      final response = await dio.post('/auth/sign-up',
+          data: {'email': email, 'password': password, 'userId': userId});
       return response.data;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

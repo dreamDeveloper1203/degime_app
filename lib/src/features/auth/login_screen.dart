@@ -1,3 +1,5 @@
+import 'package:degime_app/src/features/auth/register_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,7 +49,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
   void _submit() {
     FocusManager.instance.primaryFocus?.unfocus();
-    showToast('ddd');
     // check username textfield's validation.
     final emailError = emailErrorText(username, context);
     if (emailError != null) {
@@ -107,8 +108,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(loginControllerProvider);
-
     return Scaffold(
       body: SafeArea(
         child: SizedBox.expand(
@@ -134,14 +133,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Text('ログイン', style: MainTilte),
+                            Text('ログイン', style: MainTitle),
                             Flexible(flex: 1, child: SizedBox(height: 150.h)),
                             Align(
                               alignment: Alignment.center,
-                              child: Text(
-                                'アカウント登録がお済みでない方は、こちらから新規登録できます',
-                                style: NormalText,
-                              ),
+                              child: RichText(
+                                  text: TextSpan(
+                                      text: 'アカウント登録がお済みでない方は、',
+                                      style: NormalText,
+                                      children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'こちら',
+                                        style: NormalLinkText,
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const RegisterScreen(),
+                                                ));
+                                          }),
+                                    TextSpan(
+                                        text: 'から新規登録できます', style: NormalText)
+                                  ])),
                             ),
                             Flexible(flex: 1, child: SizedBox(height: 150.h)),
                             SizedBox(

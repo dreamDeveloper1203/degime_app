@@ -24,7 +24,6 @@ class AuthRepository {
 
     var result = data['message'];
     if (result == 'OK') {
-      _uid = data['id'].toString();
       await prefs.setBool('isLogin', true);
       await prefs.setString("token", data['data']['accessToken'].toString());
       return true;
@@ -32,6 +31,19 @@ class AuthRepository {
     } else if (result == 'Invalid Password') {}
 
     return false;
+  }
+
+  Future<String> registerUser(
+      String email, String password, String userId) async {
+    final data = await DioClient.postRegister(email, password, userId);
+    developer.log('doLogin() returned: $data');
+    var result = data['message'];
+    if (result == 'OK') {
+      return result;
+    } else if (result == 'Invalid User') {
+    } else if (result == 'Invalid Password') {}
+
+    return result;
   }
 
   Future<bool> doSendMobile(String phone) async {
