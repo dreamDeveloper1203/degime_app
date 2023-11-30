@@ -23,3 +23,12 @@ final NormalLinkText = TextStyle(
     decoration: TextDecoration.underline);
 
 final SmallText = TextStyle(fontWeight: FontWeight.w400, fontSize: 40.sp);
+
+// background
+
+const kBgDecoration = BoxDecoration(
+  image: DecorationImage(
+    image: AssetImage("assets/images/main_background.png"),
+    fit: BoxFit.fitWidth,
+  ),
+);

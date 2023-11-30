@@ -42,6 +42,8 @@ dependencies:
   http: ^1.1.0
   dio: ^5.3.4
   url_strategy: ^0.2.0
+  cached_network_image: ^3.3.0
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
