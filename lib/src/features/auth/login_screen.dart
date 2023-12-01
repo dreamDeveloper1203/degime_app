@@ -48,32 +48,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   }
 
   void _submit() {
-    FocusManager.instance.primaryFocus?.unfocus();
-    // check username textfield's validation.
-    final emailError = emailErrorText(username, context);
-    if (emailError != null) {
-      showToast(emailError);
-      return;
-    }
+    showToast("Login Success");
+    context.goNamed(AppRoute.home.name);
 
-    // check password textfield's validation.
-    final pwdError = passwordErrorText(password, context);
-    if (pwdError != null) {
-      showToast(pwdError);
-      return;
-    }
+    // FocusManager.instance.primaryFocus?.unfocus();
+    // // check username textfield's validation.
+    // final emailError = emailErrorText(username, context);
+    // if (emailError != null) {
+    //   showToast(emailError);
+    //   return;
+    // }
 
-    // try to login with input data.
-    final controller = ref.read(loginControllerProvider.notifier);
-    controller.doLogin(username, password).then(
-      (value) {
-        // go home only if login success.
-        if (value == true) {
-          showToast("Login Success");
-          context.goNamed(AppRoute.home.name);
-        }
-      },
-    );
+    // // check password textfield's validation.
+    // final pwdError = passwordErrorText(password, context);
+    // if (pwdError != null) {
+    //   showToast(pwdError);
+    //   return;
+    // }
+
+    // // try to login with input data.
+    // final controller = ref.read(loginControllerProvider.notifier);
+    // controller.doLogin(username, password).then(
+    //   (value) {
+    //     // go home only if login success.
+    //     if (value == true) {
+    //       showToast("Login Success");
+    //       context.goNamed(AppRoute.home.name);
+    //     }
+    //   },
+    // );
   }
 
   void _emailEditingComplete() {

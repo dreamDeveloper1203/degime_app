@@ -5,16 +5,15 @@ import 'package:degime_app/src/routing/app_router.dart';
 import 'package:degime_app/src/widgets/custom_image_view.dart';
 import 'package:degime_app/src/widgets/custom_text_form_field.dart';
 import 'package:degime_app/src/widgets/custom_elevated_button.dart';
-import 'package:go_router/go_router.dart';
 
-class SNSProfileScreen extends ConsumerStatefulWidget {
-  const SNSProfileScreen({Key? key}) : super(key: key);
+class SNSEditScreen extends ConsumerStatefulWidget {
+  const SNSEditScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SNSProfileScreen> createState() => _SNSProfileScreenState();
+  ConsumerState<SNSEditScreen> createState() => _SNSEditScreenState();
 }
 
-class _SNSProfileScreenState extends ConsumerState<SNSProfileScreen> {
+class _SNSEditScreenState extends ConsumerState<SNSEditScreen> {
   @override
   void initState() {
     super.initState();
@@ -303,11 +302,30 @@ class _SNSProfileScreenState extends ConsumerState<SNSProfileScreen> {
       buttonStyle: CustomButtonStyles.fillLightBlue,
       buttonTextStyle: CustomTextStyles.bodyMediumInterOnPrimary,
       alignment: Alignment.topCenter,
-      onPressed: () {
-        // context.goNamed(AppRoute.profile_sns.name);
-        showToast("Success");
-        context.goNamed(AppRoute.profile.name);
-      },
+    );
+  }
+
+  /// Section Widget
+  Widget _buildSelectTheme(BuildContext context) {
+    return SizedBox(
+      height: 96.v,
+      width: double.maxFinite,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          _buildTf(context),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              height: 96.v,
+              width: double.maxFinite,
+              decoration: BoxDecoration(
+                color: appTheme.blueGray100.withOpacity(0.44),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

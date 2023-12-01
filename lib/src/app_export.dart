@@ -6,3 +6,4 @@ export 'package:degime_app/src/theme/button_style.dart';
 export 'package:degime_app/src/theme/theme_helper.dart';
 export 'package:degime_app/src/theme/app_decoration.dart';
 export 'package:degime_app/src/utils/navigator_service.dart';
+export 'package:degime_app/src/utils/dialogs.dart';
