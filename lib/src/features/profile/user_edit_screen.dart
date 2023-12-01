@@ -5,14 +5,14 @@ import 'package:degime_app/src/widgets/custom_image_view.dart';
 import 'package:degime_app/src/widgets/custom_text_form_field.dart';
 import 'package:degime_app/src/widgets/custom_elevated_button.dart';
 
-class SNSEditScreen extends ConsumerStatefulWidget {
-  const SNSEditScreen({Key? key}) : super(key: key);
+class UserEditScreen extends ConsumerStatefulWidget {
+  const UserEditScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SNSEditScreen> createState() => _SNSEditScreenState();
+  ConsumerState<UserEditScreen> createState() => _UserEditScreenState();
 }
 
-class _SNSEditScreenState extends ConsumerState<SNSEditScreen> {
+class _UserEditScreenState extends ConsumerState<UserEditScreen> {
   @override
   void initState() {
     super.initState();
@@ -31,23 +31,107 @@ class _SNSEditScreenState extends ConsumerState<SNSEditScreen> {
           child: Container(
             width: mediaQueryData.size.width,
             height: mediaQueryData.size.height,
-            child: Column(
-              children: [
-                SizedBox(height: 28.v),
-                Column(
-                  children: [
-                    _buildGroup141(context),
-                    SizedBox(height: 44.v),
-                    _buildFrame4(context),
-                    SizedBox(height: 7.v),
-                    _buildFrame10(context),
-                    SizedBox(height: 50.v),
-                  ],
+            child: SizedBox(
+              height: 768.v,
+              width: double.maxFinite,
+              child: Stack(alignment: Alignment.bottomCenter, children: [
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 28.v),
+                          Column(
+                            children: [
+                              _buildEditColumn(context),
+                              SizedBox(height: 10.v),
+                              _buildGroup141(context),
+                              SizedBox(height: 44.v),
+                              _buildFrame4(context),
+                              SizedBox(height: 7.v),
+                              _buildFrame10(context),
+                            ],
+                          ),
+                        ]),
+                  ),
                 ),
-              ],
+              ]),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  /// Section Widget
+  Widget _buildEditColumn(BuildContext context) {
+    return SizedBox(
+      height: 286.v,
+      width: 321.h,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 10.h,
+                vertical: 11.v,
+              ),
+              decoration: AppDecoration.outlineDeepPurpleA.copyWith(
+                borderRadius: BorderRadiusStyle.roundedBorder10,
+              ),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgEdit,
+                height: 24.adaptSize,
+                width: 24.adaptSize,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              margin: EdgeInsets.only(
+                left: 101.h,
+                right: 110.h,
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: 45.h,
+                vertical: 33.v,
+              ),
+              decoration: AppDecoration.outlineBlack9006.copyWith(
+                borderRadius: BorderRadiusStyle.circleBorder55,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 2.v),
+                  Text(
+                    TextConstant.strPlus,
+                    style: theme.textTheme.headlineLarge,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: EdgeInsets.only(
+                right: 28.h,
+                bottom: 29.v,
+              ),
+              child: Text(
+                "lbl71",
+                style: CustomTextStyles.bodyMediumOnPrimary14,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -214,6 +298,19 @@ class _SNSEditScreenState extends ConsumerState<SNSEditScreen> {
         borderDecoration: TextFormFieldStyleHelper.outlineBlackTL81,
         autofocus: false,
       ),
+    );
+  }
+
+  /// Section Widget
+  Widget _buildTf(BuildContext context) {
+    return CustomElevatedButton(
+      height: 40.v,
+      width: 272.h,
+      text: TextConstant.strSelectTheme,
+      margin: EdgeInsets.only(top: 22.v),
+      buttonStyle: CustomButtonStyles.fillLightBlue,
+      buttonTextStyle: CustomTextStyles.bodyMediumInterOnPrimary,
+      alignment: Alignment.topCenter,
     );
   }
 }

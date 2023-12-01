@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:degime_app/src/app_export.dart';
 import 'package:degime_app/src/routing/app_router.dart';
-import 'package:degime_app/src/widgets/custom_image_view.dart';
 import 'package:degime_app/src/widgets/custom_text_form_field.dart';
 import 'package:degime_app/src/widgets/custom_elevated_button.dart';
+import 'package:degime_app/src/widgets/custom_image_view.dart';
 import 'package:go_router/go_router.dart';
 
 class SNSProfileScreen extends ConsumerStatefulWidget {
@@ -38,8 +38,6 @@ class _SNSProfileScreenState extends ConsumerState<SNSProfileScreen> {
                 SizedBox(height: 28.v),
                 Column(
                   children: [
-                    _buildEditColumn(context),
-                    SizedBox(height: 10.v),
                     _buildGroup141(context),
                     SizedBox(height: 44.v),
                     _buildFrame4(context),
@@ -58,72 +56,13 @@ class _SNSProfileScreenState extends ConsumerState<SNSProfileScreen> {
   }
 
   /// Section Widget
-  Widget _buildEditColumn(BuildContext context) {
-    return SizedBox(
-      height: 286.v,
-      width: 321.h,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10.h,
-                vertical: 11.v,
-              ),
-              decoration: AppDecoration.outlineDeepPurpleA.copyWith(
-                borderRadius: BorderRadiusStyle.roundedBorder10,
-              ),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgEdit,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: EdgeInsets.only(
-                left: 101.h,
-                right: 110.h,
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: 45.h,
-                vertical: 33.v,
-              ),
-              decoration: AppDecoration.outlineBlack9006.copyWith(
-                borderRadius: BorderRadiusStyle.circleBorder55,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 2.v),
-                  Text(
-                    TextConstant.strPlus,
-                    style: theme.textTheme.headlineLarge,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.only(
-                right: 28.h,
-                bottom: 29.v,
-              ),
-              child: Text(
-                "lbl71",
-                style: CustomTextStyles.bodyMediumOnPrimary14,
-              ),
-            ),
-          ),
-        ],
+  Widget _buildEditText(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.h),
+      child: CustomImageView(
+        imagePath: ImageConstant.imgRectangle,
+        height: 240.adaptSize,
+        width: 375.adaptSize,
       ),
     );
   }
@@ -304,10 +243,9 @@ class _SNSProfileScreenState extends ConsumerState<SNSProfileScreen> {
       buttonTextStyle: CustomTextStyles.bodyMediumInterOnPrimary,
       alignment: Alignment.topCenter,
       onPressed: () {
-        // context.goNamed(AppRoute.profile_sns.name);
-        showToast("Success");
-        context.goNamed(AppRoute.profile.name);
+        context.pushNamed(AppRoute.profile_sns.name);
       },
     );
   }
+
 }
