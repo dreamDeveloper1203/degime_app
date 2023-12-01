@@ -48,9 +48,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   }
 
   void _submit() {
-    
     showToast("Login Success");
     context.goNamed(AppRoute.home.name);
+
     // FocusManager.instance.primaryFocus?.unfocus();
     // // check username textfield's validation.
     // final emailError = emailErrorText(username, context);
