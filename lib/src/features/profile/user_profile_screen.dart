@@ -5,6 +5,7 @@ import 'package:degime_app/src/routing/app_router.dart';
 import 'package:degime_app/src/widgets/custom_text_form_field.dart';
 import 'package:degime_app/src/widgets/custom_elevated_button.dart';
 import 'package:degime_app/src/widgets/custom_image_view.dart';
+import 'package:go_router/go_router.dart';
 
 class UserProfileScreen extends ConsumerStatefulWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
@@ -243,30 +244,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       buttonStyle: CustomButtonStyles.fillLightBlue,
       buttonTextStyle: CustomTextStyles.bodyMediumInterOnPrimary,
       alignment: Alignment.topCenter,
-    );
-  }
-
-  /// Section Widget
-  Widget _buildSelectTheme(BuildContext context) {
-    return SizedBox(
-      height: 96.v,
-      width: double.maxFinite,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          _buildTf(context),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              height: 96.v,
-              width: double.maxFinite,
-              decoration: BoxDecoration(
-                color: appTheme.blueGray100.withOpacity(0.44),
-              ),
-            ),
-          ),
-        ],
-      ),
+      onPressed: () {
+        context.pushNamed(AppRoute.profile_user.name);
+      },
     );
   }
 }

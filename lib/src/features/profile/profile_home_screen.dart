@@ -1,5 +1,5 @@
-import 'package:degime_app/src/features/profile/sns_profile_screen.dart';
-import 'package:degime_app/src/features/profile/user_profie_screen.dart';
+import 'package:degime_app/src/features/profile/user_profile_screen.dart';
+import 'package:degime_app/src/features/profile/sns_profie_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:degime_app/src/app_export.dart';
@@ -66,10 +66,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                                   tabs: [
                                     Tab(
                                         child:
-                                            Text(TextConstant.strSNSProfile)),
+                                            Text(TextConstant.strUserProfile)),
                                     Tab(
                                         child:
-                                            Text(TextConstant.strUserProfile))
+                                            Text(TextConstant.strSNSProfile)),
                                   ])),
                           SizedBox(
                             height: 780.v,
