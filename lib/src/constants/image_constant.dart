@@ -16,4 +16,8 @@ class ImageConstant {
   static String imgEdit = '$imagePath/img_edit.svg';
 
   static String imgRectangle = '$imagePath/img_rectangle.png';
+
+  static String imgRectangleNoBorder = '$imagePath/img_rectangle_noborder.png';
+
+  static String imgSetting = '$imagePath/img_setting.png';
 }

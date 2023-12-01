@@ -1,9 +1,12 @@
+import 'package:degime_app/src/routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:degime_app/src/app_export.dart';
 import 'package:degime_app/src/widgets/custom_image_view.dart';
 import 'package:degime_app/src/widgets/custom_text_form_field.dart';
+import 'package:degime_app/src/widgets/custom_lined_button.dart';
 import 'package:degime_app/src/widgets/custom_elevated_button.dart';
+import 'package:go_router/go_router.dart';
 
 class UserEditScreen extends ConsumerStatefulWidget {
   const UserEditScreen({Key? key}) : super(key: key);
@@ -13,6 +16,37 @@ class UserEditScreen extends ConsumerStatefulWidget {
 }
 
 class _UserEditScreenState extends ConsumerState<UserEditScreen> {
+  TextEditingController searchController = TextEditingController();
+
+  List<String> buttonList = [
+    TextConstant.str1ImageAdd,
+    TextConstant.str2ImageAdd,
+    TextConstant.str3ImageAdd,
+    TextConstant.str4ImageAdd,
+    TextConstant.strVideoAdd,
+    TextConstant.strMapAdd,
+    TextConstant.strLinkAdd,
+    TextConstant.strBlankAdd,
+    TextConstant.strSelfProfileAdd,
+    TextConstant.strSlideAdd
+  ];
+
+  List<String> itemList = [
+    TextConstant.str1ImageAdd,
+    TextConstant.str2ImageAdd,
+    TextConstant.str3ImageAdd
+  ];
+
+  List<String> inputList = [
+    TextConstant.strProfile,
+    TextConstant.strCompanyName,
+    TextConstant.strRole,
+    TextConstant.strPhone,
+    TextConstant.strMobile,
+    TextConstant.strEmail,
+    TextConstant.strAddress
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -23,120 +57,175 @@ class _UserEditScreenState extends ConsumerState<UserEditScreen> {
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
       child: Scaffold(
-        extendBody: true,
-        extendBodyBehindAppBar: true,
-        backgroundColor: Colors.transparent,
-        resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
-          child: Container(
-            width: mediaQueryData.size.width,
-            height: mediaQueryData.size.height,
+          extendBody: true,
+          extendBodyBehindAppBar: true,
+          resizeToAvoidBottomInset: false,
+          body: SingleChildScrollView(
             child: SizedBox(
-              height: 768.v,
-              width: double.maxFinite,
-              child: Stack(alignment: Alignment.bottomCenter, children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              width: mediaQueryData.size.width,
+              height: mediaQueryData.size.height,
+              child: ListView(
+                children: [
+                  _buildButtonBar(context),
+                  _buildSetting(context),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        left: 32.h,
+                        right: 32.h,
+                        bottom: 100.v,
+                      ),
+                      decoration: AppDecoration.fillGray.copyWith(
+                          borderRadius: BorderRadiusStyle.customBorderTL10),
+                      child: Column(
                         children: [
-                          SizedBox(height: 28.v),
-                          Column(
-                            children: [
-                              _buildEditColumn(context),
-                              SizedBox(height: 10.v),
-                              _buildGroup141(context),
-                              SizedBox(height: 44.v),
-                              _buildFrame4(context),
-                              SizedBox(height: 7.v),
-                              _buildFrame10(context),
-                            ],
-                          ),
-                        ]),
+                          _buildBackgroundWidget(context),
+                          SizedBox(height: 10.v),
+                          _buildGroup141(context),
+                          SizedBox(height: 44.v),
+                          _buildInputs(context),
+                          SizedBox(height: 20.v),
+                          _buildElements(context),
+                          SizedBox(height: 20.v),
+                          _buildButtons(context),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ]),
+                ],
+              ),
             ),
-          ),
+          )),
+    );
+  }
+
+  Widget _buildButtonBar(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        decoration: AppDecoration.fillGray
+            .copyWith(borderRadius: BorderRadiusStyle.customBorderTL10),
+        padding: EdgeInsets.only(top: 20.v, right: 32.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              onPressed: () {
+                context.pop();
+              },
+              child: Icon(Icons.subdirectory_arrow_left,
+                  color: appTheme.deepPurpleA400),
+            ),
+            CustomElevatedButton(
+              height: 24.v,
+              width: 84.h,
+              margin: EdgeInsets.symmetric(horizontal: 1.h),
+              text: TextConstant.strPublish,
+              buttonStyle: CustomButtonStyles.fillDeepOrangeR6,
+              buttonTextStyle: CustomTextStyles.bodyMediumOnPrimary14,
+            ),
+            CustomElevatedButton(
+              height: 24.v,
+              width: 95.h,
+              text: TextConstant.strPreview,
+              buttonStyle: CustomButtonStyles.fillDeepPurpleA400R6,
+              buttonTextStyle: CustomTextStyles.bodyMediumOnPrimary14,
+            ),
+            CustomElevatedButton(
+              height: 24.v,
+              width: 85.h,
+              text: TextConstant.strSNSBtn,
+              buttonStyle: CustomButtonStyles.fillDeepOrangeR6,
+              buttonTextStyle: CustomTextStyles.bodyMediumOnPrimary14,
+              onPressed: () {
+                context.pushReplacementNamed(AppRoute.profile_sns.name);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSetting(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        decoration: AppDecoration.fillGray
+            .copyWith(borderRadius: BorderRadiusStyle.customBorderTL10),
+        padding: EdgeInsets.only(top: 10.v),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: 40.h,
+              margin: EdgeInsets.only(top: 3.v, left: 260.h),
+              padding: EdgeInsets.symmetric(
+                horizontal: 7.h,
+                vertical: 2.v,
+              ),
+              decoration: AppDecoration.fillDeepOrange.copyWith(
+                borderRadius: BorderRadiusStyle.circleBorder7,
+              ),
+              child: Text(
+                TextConstant.strBackground,
+                style: CustomTextStyles.bodyMediumOnPrimary14,
+              ),
+            ),
+            Container(
+              width: 26.adaptSize,
+              margin: EdgeInsets.only(top: 3.v, right: 40.h),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgSetting,
+                height: 26.adaptSize,
+                width: 26.adaptSize,
+                fit: BoxFit.fill,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   /// Section Widget
-  Widget _buildEditColumn(BuildContext context) {
-    return SizedBox(
-      height: 286.v,
-      width: 321.h,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10.h,
-                vertical: 11.v,
-              ),
-              decoration: AppDecoration.outlineDeepPurpleA.copyWith(
-                borderRadius: BorderRadiusStyle.roundedBorder10,
-              ),
+
+  Widget _buildBackgroundWidget(BuildContext context) {
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SizedBox(
+        height: 290.v,
+        width: 370.h,
+        child: Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 16.h),
               child: CustomImageView(
-                imagePath: ImageConstant.imgEdit,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
+                imagePath: ImageConstant.imgRectangleNoBorder,
+                height: 250.v,
+                width: 360.h,
+                alignment: Alignment.center,
+                fit: BoxFit.cover,
+                border: Border.all(width: 5.h, color: appTheme.deepPurpleA700),
+                radius: BorderRadius.all(Radius.circular(6.h)),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: EdgeInsets.only(
-                left: 101.h,
-                right: 110.h,
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: 45.h,
-                vertical: 33.v,
-              ),
-              decoration: AppDecoration.outlineBlack9006.copyWith(
-                borderRadius: BorderRadiusStyle.circleBorder55,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 2.v),
-                  Text(
-                    TextConstant.strPlus,
-                    style: theme.textTheme.headlineLarge,
-                  ),
-                ],
-              ),
+            Padding(
+              padding: EdgeInsets.all(20.h),
+              child: CustomImageView(
+                  imagePath: ImageConstant.imgEdit,
+                  height: 25.adaptSize,
+                  width: 25.adaptSize,
+                  alignment: Alignment.topRight),
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.only(
-                right: 28.h,
-                bottom: 29.v,
-              ),
-              child: Text(
-                "lbl71",
-                style: CustomTextStyles.bodyMediumOnPrimary14,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  /// Section Widget
   Widget _buildGroup140(BuildContext context) {
     return CustomTextFormField(
       width: 184.h,
@@ -153,164 +242,197 @@ class _UserEditScreenState extends ConsumerState<UserEditScreen> {
     );
   }
 
-  /// Section Widget
   Widget _buildGroup141(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 31.h,
-        right: 37.h,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(
-              top: 14.v,
-              bottom: 9.v,
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: 46.h,
-              vertical: 31.v,
-            ),
-            decoration: AppDecoration.fillBluegray100.copyWith(
-              borderRadius: BorderRadiusStyle.circleBorder55,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(height: 8.v),
-                Text(
-                  TextConstant.strPlus,
-                  style: theme.textTheme.headlineLarge,
-                ),
-              ],
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(
+            top: 14.v,
+            bottom: 9.v,
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 13.h),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 15.h),
-                    child: Text(
-                      "lbl71",
-                      style: CustomTextStyles.bodyMediumOnPrimary14,
+          padding: EdgeInsets.symmetric(
+            horizontal: 40.h,
+            vertical: 31.v,
+          ),
+          decoration: AppDecoration.fillBluegray100.copyWith(
+            borderRadius: BorderRadiusStyle.circleBorder55,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(height: 8.v),
+              Text(
+                TextConstant.strPlus,
+                style: theme.textTheme.headlineLarge,
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 13.h),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 15.h),
+                  child: Text(
+                    "lbl71",
+                    style: CustomTextStyles.bodyMediumOnPrimary14,
+                  ),
+                ),
+              ),
+              _buildGroup140(context),
+              SizedBox(height: 15.v),
+              SizedBox(
+                width: 182.h,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 40.adaptSize,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 11.h,
+                        vertical: 1.v,
+                      ),
+                      decoration: AppDecoration.fillBluegray100,
+                      child: Text(
+                        TextConstant.strPlus,
+                        style: theme.textTheme.headlineLarge,
+                      ),
                     ),
-                  ),
+                    Container(
+                      width: 40.adaptSize,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 11.h,
+                        vertical: 1.v,
+                      ),
+                      decoration: AppDecoration.fillBluegray100,
+                      child: Text(
+                        TextConstant.strPlus,
+                        style: theme.textTheme.headlineLarge,
+                      ),
+                    ),
+                    Container(
+                      width: 40.adaptSize,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 11.h,
+                        vertical: 1.v,
+                      ),
+                      decoration: AppDecoration.fillBluegray100,
+                      child: Text(
+                        TextConstant.strPlus,
+                        style: theme.textTheme.headlineLarge,
+                      ),
+                    ),
+                    Container(
+                      width: 40.adaptSize,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 11.h,
+                        vertical: 1.v,
+                      ),
+                      decoration: AppDecoration.fillBluegray100,
+                      child: Text(
+                        TextConstant.strPlus,
+                        style: theme.textTheme.headlineLarge,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 14.v),
-                _buildGroup140(context),
-                SizedBox(height: 28.v),
-                SizedBox(
-                  width: 182.h,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: 40.adaptSize,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 11.h,
-                          vertical: 1.v,
-                        ),
-                        decoration: AppDecoration.fillBluegray100,
-                        child: Text(
-                          TextConstant.strPlus,
-                          style: theme.textTheme.headlineLarge,
-                        ),
-                      ),
-                      Container(
-                        width: 40.adaptSize,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 11.h,
-                          vertical: 1.v,
-                        ),
-                        decoration: AppDecoration.fillBluegray100,
-                        child: Text(
-                          TextConstant.strPlus,
-                          style: theme.textTheme.headlineLarge,
-                        ),
-                      ),
-                      Container(
-                        width: 40.adaptSize,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 11.h,
-                          vertical: 1.v,
-                        ),
-                        decoration: AppDecoration.fillBluegray100,
-                        child: Text(
-                          TextConstant.strPlus,
-                          style: theme.textTheme.headlineLarge,
-                        ),
-                      ),
-                      Container(
-                        width: 40.adaptSize,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 11.h,
-                          vertical: 1.v,
-                        ),
-                        decoration: AppDecoration.fillBluegray100,
-                        child: Text(
-                          TextConstant.strPlus,
-                          style: theme.textTheme.headlineLarge,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  /// Section Widget
-  Widget _buildFrame4(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 60.h,
-        right: 43.h,
-      ),
-      child: CustomTextFormField(
-        hintText: TextConstant.strProfile,
-        hintStyle: CustomTextStyles.titleMediumFamiljenGroteskBlack900,
-        autofocus: false,
-      ),
+  Widget _buildInputs(BuildContext context) {
+    List<Widget> inputWidgets = [];
+
+    for (String inputText in inputList) {
+      inputWidgets.add(
+        Padding(
+          padding: EdgeInsets.only(left: 27.h, right: 27.h, top: 10.v),
+          child: CustomTextFormField(
+            hintText: inputText,
+            hintStyle: CustomTextStyles.titleMediumFamiljenGroteskBlack900,
+            autofocus: false,
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        ...inputWidgets,
+      ],
     );
   }
 
-  /// Section Widget
-  Widget _buildFrame10(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 60.h,
-        right: 43.h,
-      ),
-      child: CustomTextFormField(
-        hintText: TextConstant.strCompanyName,
-        hintStyle: CustomTextStyles.titleMediumFamiljenGroteskBlack900,
-        textInputAction: TextInputAction.done,
-        borderDecoration: TextFormFieldStyleHelper.outlineBlackTL81,
-        autofocus: false,
-      ),
+  Widget _buildButtons(BuildContext context) {
+    List<Widget> buttonWidgets = [];
+
+    for (String buttonText in buttonList) {
+      buttonWidgets.add(
+        Padding(
+          padding: EdgeInsets.only(left: 27.h, right: 27.h, top: 10.v),
+          child: CustomLinedButton(
+            height: 40.v,
+            width: 255.h,
+            text: buttonText,
+            margin: EdgeInsets.only(top: 1.v, bottom: 1.v),
+            buttonStyle: CustomButtonStyles.fillLightGray,
+            buttonTextStyle:
+                CustomTextStyles.titleMediumFamiljenGroteskBlack900,
+            alignment: Alignment.topCenter,
+            onPressed: () {},
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        ...buttonWidgets,
+      ],
     );
   }
 
-  /// Section Widget
-  Widget _buildTf(BuildContext context) {
-    return CustomElevatedButton(
-      height: 40.v,
-      width: 272.h,
-      text: TextConstant.strSelectTheme,
-      margin: EdgeInsets.only(top: 22.v),
-      buttonStyle: CustomButtonStyles.fillLightBlue,
-      buttonTextStyle: CustomTextStyles.bodyMediumInterOnPrimary,
-      alignment: Alignment.topCenter,
+  Widget _buildElements(BuildContext context) {
+    return SizedBox(
+      height: (itemList.length + 1.5) * 40.v,
+      child: ReorderableListView.builder(
+        itemCount: itemList.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            key: Key('$index'),
+            title: CustomLinedButton(
+              height: 40.v,
+              width: 255.h,
+              text: itemList[index],
+              margin: EdgeInsets.only(top: 1.v, bottom: 1.v),
+              buttonStyle: CustomButtonStyles.fillLightGray,
+              buttonTextStyle:
+                  CustomTextStyles.titleMediumFamiljenGroteskBlack900,
+              alignment: Alignment.topCenter,
+              onPressed: () {},
+            ),
+          );
+        },
+        onReorder: (int oldIndex, int newIndex) {
+          setState(() {
+            if (oldIndex < newIndex) {
+              newIndex -= 1;
+            }
+            final String item = itemList.removeAt(oldIndex);
+            itemList.insert(newIndex, item);
+          });
+        },
+      ),
     );
   }
 }

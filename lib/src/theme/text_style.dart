@@ -229,6 +229,10 @@ class CustomTextStyles {
       theme.textTheme.titleMedium!.familjenGrotesk.copyWith(
         color: appTheme.black900.withOpacity(0.3),
       );
+  static get titleMediumFamiljenGroteskBlack900Left =>
+      theme.textTheme.titleMedium!.familjenGrotesk.copyWith(
+        color: appTheme.black900.withOpacity(0.3),
+      );
   static get titleMediumFamiljenGroteskBlack900_1 =>
       theme.textTheme.titleMedium!.familjenGrotesk.copyWith(
         color: appTheme.black900,
