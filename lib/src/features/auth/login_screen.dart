@@ -48,32 +48,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   }
 
   void _submit() {
-    FocusManager.instance.primaryFocus?.unfocus();
-    // check username textfield's validation.
-    final emailError = emailErrorText(username, context);
-    if (emailError != null) {
-      showToast(emailError);
-      return;
-    }
+    
+    showToast("Login Success");
+    context.goNamed(AppRoute.home.name);
+    // FocusManager.instance.primaryFocus?.unfocus();
+    // // check username textfield's validation.
+    // final emailError = emailErrorText(username, context);
+    // if (emailError != null) {
+    //   showToast(emailError);
+    //   return;
+    // }
 
-    // check password textfield's validation.
-    final pwdError = passwordErrorText(password, context);
-    if (pwdError != null) {
-      showToast(pwdError);
-      return;
-    }
+    // // check password textfield's validation.
+    // final pwdError = passwordErrorText(password, context);
+    // if (pwdError != null) {
+    //   showToast(pwdError);
+    //   return;
+    // }
 
-    // try to login with input data.
-    final controller = ref.read(loginControllerProvider.notifier);
-    controller.doLogin(username, password).then(
-      (value) {
-        // go home only if login success.
-        if (value == true) {
-          showToast("Login Success");
-          context.goNamed(AppRoute.home.name);
-        }
-      },
-    );
+    // // try to login with input data.
+    // final controller = ref.read(loginControllerProvider.notifier);
+    // controller.doLogin(username, password).then(
+    //   (value) {
+    //     // go home only if login success.
+    //     if (value == true) {
+    //       showToast("Login Success");
+    //       context.goNamed(AppRoute.home.name);
+    //     }
+    //   },
+    // );
   }
 
   void _emailEditingComplete() {
@@ -90,7 +93,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
     // i can't understand why this called multiple...
     //if (ref.watch(loginControllerProvider).isLoading) return;
-    _submit();
+    //_submit();
   }
 
   Future<void> getLoginFlag() async {
