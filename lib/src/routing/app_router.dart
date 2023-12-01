@@ -1,4 +1,5 @@
 import 'package:degime_app/src/features/profile/sns_edit_screen.dart';
+import 'package:degime_app/src/features/profile/user_edit_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +10,7 @@ import 'package:degime_app/src/features/home/home_screen.dart';
 import 'package:degime_app/src/features/auth/register_screen.dart';
 import 'package:degime_app/src/features/profile/profile_home_screen.dart';
 
-enum AppRoute { login, home, register, profile, profile_sns }
+enum AppRoute { login, home, register, profile, profile_sns, profile_user}
 
 final GoRouteProvider = Provider<GoRouter>((ref) {
   return GoRouter(initialLocation: '/', debugLogDiagnostics: false, routes: [
@@ -57,6 +58,15 @@ final GoRouteProvider = Provider<GoRouter>((ref) {
         fullscreenDialog: true,
         child: const SNSEditScreen(),
       ),
-    )
+    ),
+    GoRoute(
+      path: '/profile_user',
+      name: AppRoute.profile_user.name,
+      pageBuilder: (context, state) => MaterialPage(
+        key: state.pageKey,
+        fullscreenDialog: true,
+        child: const UserEditScreen(),
+      ),
+    ),
   ]);
 });
