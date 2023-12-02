@@ -10,6 +10,12 @@ class CustomButtonStyles {
           borderRadius: BorderRadius.circular(10.h),
         ),
       );
+  static ButtonStyle get fillDeepOrangeR6 => ElevatedButton.styleFrom(
+        backgroundColor: appTheme.deepOrange300,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6.h),
+        ),
+      );
   static ButtonStyle get fillDeepOrangeTL10 => ElevatedButton.styleFrom(
         backgroundColor: appTheme.deepOrange400,
         shape: RoundedRectangleBorder(
@@ -22,10 +28,27 @@ class CustomButtonStyles {
           borderRadius: BorderRadius.circular(10.h),
         ),
       );
+
+  static ButtonStyle get fillDeepPurpleA400R6 => ElevatedButton.styleFrom(
+        backgroundColor: appTheme.deepPurpleA400,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6.h),
+        ),
+      );
   static ButtonStyle get fillLightBlue => ElevatedButton.styleFrom(
         backgroundColor: appTheme.lightBlue400,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.h),
+        ),
+      );
+  static ButtonStyle get fillLightGray => ButtonStyle(
+        side: MaterialStateProperty.all<BorderSide>(
+            BorderSide(color: appTheme.black900.withOpacity(0.3))),
+        shape: MaterialStateProperty.all<OutlinedBorder>(
+          RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(10.h), // Set your desired border radius
+          ),
         ),
       );
   static ButtonStyle get fillLightGreen => ElevatedButton.styleFrom(
