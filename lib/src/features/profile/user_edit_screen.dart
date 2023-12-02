@@ -7,6 +7,8 @@ import 'package:degime_app/src/widgets/custom_text_form_field.dart';
 import 'package:degime_app/src/widgets/custom_lined_button.dart';
 import 'package:degime_app/src/widgets/custom_elevated_button.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class UserEditScreen extends ConsumerStatefulWidget {
   const UserEditScreen({Key? key}) : super(key: key);
@@ -47,9 +49,21 @@ class _UserEditScreenState extends ConsumerState<UserEditScreen> {
     TextConstant.strAddress
   ];
 
+  File? _backImg;
+  String? _avatarImg = ImageConstant.imgRectangleNoBorder;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<File?> uploadImage() async {
+    final XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) return null;
+    final File image = File(pickedFile.path);
+    return image;
   }
 
   @override
@@ -202,23 +216,41 @@ class _UserEditScreenState extends ConsumerState<UserEditScreen> {
           children: [
             Padding(
               padding: EdgeInsets.only(bottom: 16.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgRectangleNoBorder,
-                height: 250.v,
-                width: 360.h,
-                alignment: Alignment.center,
-                fit: BoxFit.cover,
-                border: Border.all(width: 5.h, color: appTheme.deepPurpleA700),
-                radius: BorderRadius.all(Radius.circular(6.h)),
-              ),
+              child: _backImg == null
+                  ? CustomImageView(
+                      imagePath: ImageConstant.imgRectangleNoBorder,
+                      height: 250.v,
+                      width: 360.h,
+                      alignment: Alignment.center,
+                      fit: BoxFit.cover,
+                      border: Border.all(
+                          width: 5.h, color: appTheme.deepPurpleA700),
+                      radius: BorderRadius.all(Radius.circular(6.h)),
+                    )
+                  : Container(
+                      alignment: Alignment.center,
+                      child: Image.file(
+                        _backImg!,
+                        fit: BoxFit.cover,
+                        height: 250.v,
+                        width: 360.h,
+                      ),
+                    ),
             ),
             Padding(
               padding: EdgeInsets.all(20.h),
               child: CustomImageView(
-                  imagePath: ImageConstant.imgEdit,
-                  height: 25.adaptSize,
-                  width: 25.adaptSize,
-                  alignment: Alignment.topRight),
+                imagePath: ImageConstant.imgEdit,
+                height: 25.adaptSize,
+                width: 25.adaptSize,
+                alignment: Alignment.topRight,
+                onTap: () async {
+                  File? image = await uploadImage();
+                  setState(() {
+                    _backImg = image;
+                  });
+                },
+              ),
             ),
           ],
         ),
@@ -246,45 +278,44 @@ class _UserEditScreenState extends ConsumerState<UserEditScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          margin: EdgeInsets.only(
-            top: 14.v,
-            bottom: 9.v,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: 40.h,
-            vertical: 31.v,
-          ),
-          decoration: AppDecoration.fillBluegray100.copyWith(
-            borderRadius: BorderRadiusStyle.circleBorder55,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(height: 8.v),
-              Text(
-                TextConstant.strPlus,
-                style: theme.textTheme.headlineLarge,
+        Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 16.h),
+              child: Container(
+                alignment: Alignment.center,
+                child: CircleAvatar(
+                  radius: 50.h,
+                  backgroundColor: appTheme.blueGray100,
+                  backgroundImage: AssetImage(_avatarImg!),
+                ),
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  top: 40.h, left: 40.h, bottom: 30.h, right: 30.h),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgPlus,
+                height: 25.adaptSize,
+                width: 25.adaptSize,
+                alignment: Alignment.topRight,
+                onTap: () async {
+                  final XFile? pickedFile = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
+                  setState(() {
+                    _avatarImg =
+                        pickedFile?.path ?? ImageConstant.imgRectangleNoBorder;
+                  });
+                },
+              ),
+            ),
+          ],
         ),
         Padding(
           padding: EdgeInsets.only(left: 13.h),
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 15.h),
-                  child: Text(
-                    "lbl71",
-                    style: CustomTextStyles.bodyMediumOnPrimary14,
-                  ),
-                ),
-              ),
               _buildGroup140(context),
               SizedBox(height: 15.v),
               SizedBox(
