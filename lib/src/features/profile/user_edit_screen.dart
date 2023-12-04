@@ -50,7 +50,7 @@ class _UserEditScreenState extends ConsumerState<UserEditScreen> {
   ];
 
   File? _backImg;
-  String? _avatarImg = ImageConstant.imgRectangleNoBorder;
+  File? _avatarImg;
 
   @override
   void initState() {
@@ -285,11 +285,18 @@ class _UserEditScreenState extends ConsumerState<UserEditScreen> {
               padding: EdgeInsets.only(bottom: 16.h),
               child: Container(
                 alignment: Alignment.center,
-                child: CircleAvatar(
-                  radius: 50.h,
-                  backgroundColor: appTheme.blueGray100,
-                  backgroundImage: AssetImage(_avatarImg!),
-                ),
+                child: _avatarImg == null
+                    ? CircleAvatar(
+                        radius: 50.h,
+                        backgroundColor: appTheme.blueGray100,
+                        backgroundImage:
+                            AssetImage(ImageConstant.imgRectangleNoBorder),
+                      )
+                    : CircleAvatar(
+                        radius: 50.h,
+                        backgroundColor: appTheme.blueGray100,
+                        backgroundImage: FileImage(_avatarImg!),
+                      ),
               ),
             ),
             Padding(
@@ -301,11 +308,9 @@ class _UserEditScreenState extends ConsumerState<UserEditScreen> {
                 width: 25.adaptSize,
                 alignment: Alignment.topRight,
                 onTap: () async {
-                  final XFile? pickedFile = await ImagePicker()
-                      .pickImage(source: ImageSource.gallery);
+                  File? image = await uploadImage();
                   setState(() {
-                    _avatarImg =
-                        pickedFile?.path ?? ImageConstant.imgRectangleNoBorder;
+                    _avatarImg = image;
                   });
                 },
               ),
